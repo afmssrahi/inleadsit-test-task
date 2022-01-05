@@ -19,6 +19,7 @@ const ListOfEmployee = () => {
 
 	// ========== For Modal2 ==============
 	const [show2, setShow2] = useState(false);
+	let idRef = useRef('');
 	let nameRef = useRef('');
 	let ageRef = useRef('');
 	let positionRef = useRef('');
@@ -49,6 +50,8 @@ const ListOfEmployee = () => {
 
 	// ==== for Update =======
 	const handleUpdate = (index) => {
+		reset();
+		idRef.current = index;
 		nameRef.current = employees[index].name;
 		ageRef.current = employees[index].age;
 		positionRef.current = employees[index].position;
@@ -56,7 +59,9 @@ const ListOfEmployee = () => {
 	};
 
 	const UpdateSubmit = (data) => {
-		console.log(data);
+		employees[data.id - 1].name = data.name;
+		employees[data.id - 1].age = data.age;
+		employees[data.id - 1].position = data.position;
 		reset();
 		handleClose2();
 	};
@@ -78,50 +83,85 @@ const ListOfEmployee = () => {
 					<Modal.Title>Create an employee</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<form onSubmit={handleSubmit(onSubmit)}>
-						<input {...register('name')} />
-
-						<input {...register('age', { required: true })} />
+					<form
+						className='formModal'
+						onSubmit={handleSubmit(onSubmit)}
+					>
+						<label>Name:</label>
+						<br />
+						<input {...register('name')} /> <br />
 						{/* errors will return when field validation fails  */}
-						{errors.exampleRequired && (
-							<span>This field is required</span>
-						)}
+						{errors.name && <span>This field is required</span>}
+						<label>age:</label>
+						<br />
+						<input {...register('age', { required: true })} />
+						<br />
+						{/* errors will return when field validation fails  */}
+						{errors.age && <span>This field is required</span>}
+						<label>position:</label>
+						<br />
 						<input {...register('position')} />
-
-						<input type='submit' />
+						<br />
+						{/* errors will return when field validation fails  */}
+						{errors.position && (
+							<span>This field is required</span>
+						)}{' '}
+						<br />
+						<input className='btn btn-primary' type='submit' />
 					</form>
 				</Modal.Body>
 			</Modal>
 
-			{/* For Create Employee Modal */}
+			{/* For Update Employee Modal */}
 			<Modal show={show2} onHide={handleClose2}>
 				<Modal.Header closeButton>
 					<Modal.Title>Update an employee</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<form onSubmit={handleSubmit(UpdateSubmit)}>
+					<form
+						className='formModal'
+						onSubmit={handleSubmit(UpdateSubmit)}
+					>
+						<label>Id:</label>
+						<br />
+						<input
+							value={idRef.current + 1}
+							ref={idRef}
+							{...register('id')}
+							placeholder={idRef.current}
+						/>
+						<br />
+						<label>Name:</label>
+						<br />
 						<input
 							ref={nameRef}
 							{...register('name')}
 							placeholder={nameRef.current}
 						/>
-
+						<br />
+						<label>Age:</label>
+						<br />
 						<input
 							ref={ageRef}
 							{...register('age', { required: true })}
 							placeholder={ageRef.current}
 						/>
+						<br />
 						{/* errors will return when field validation fails  */}
 						{errors.exampleRequired && (
 							<span>This field is required</span>
 						)}
+						<label>Position:</label>
+						<br />
 						<input
 							ref={positionRef}
 							{...register('position')}
-							placeholder={ageRef.current}
+							placeholder={positionRef.current}
 						/>
+						<br />
+						<br />
 
-						<input type='submit' />
+						<input className='btn btn-primary' type='submit' />
 					</form>
 				</Modal.Body>
 			</Modal>
